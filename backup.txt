@@ -1,0 +1,286 @@
+//Imports 
+const express = require('express');
+const http = require('http');
+const cors = require('cors');
+const { read, cpSync } = require('fs');
+const { parse } = require('path');
+const { reverse, REFUSED } = require('dns');
+const { url } = require('inspector');
+const prompt = require("prompt-sync")();
+
+//Init zone 
+const app = express();
+app.use(cors()); //использование обработчика на 1-ом уровне (ставить перед запросом)
+
+app.all('/', (req, res) => {
+    console.log('URL = ' + req.url);
+    console.log('Original_URL = ' + req.originalUrl);
+    console.log('METHOD = ' + req.method);
+    console.log('HOST = ' + req.secure);
+    console.log('IsSecure = ' + res.header.host);
+    console.log('Query = ', req.query);
+
+    console.log('Body = ', req.query);
+    res.status(200).json( {message: "All is ok!"});
+});
+
+app.get('/me', (req, res) =>{
+    res.status(200).json( {message: "All is ok!" });
+})
+
+
+//summary
+app.use('/sum', (req, res, next) => {
+
+    let x1 = parseInt(prompt("Enter 1st num: "));
+    let x2 = parseInt(prompt("Enter 2nd num: "));
+    const sum = x1+x2;
+    
+    res.status(200).json({ sum });
+
+    console.log(sum);
+
+    next();
+})
+
+//reverse string 
+app.use('/reverseCase', (req, res, next) => {
+
+    const readline = require('readline');
+    var reverse = require("reverse-string");
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+        
+    });
+        
+    rl.question('Enter a string for reverse: ', answer => {
+        x = reverse(answer);
+        rl.close();
+
+        console.log(x);
+
+
+    });    
+    
+    
+    next();
+})
+
+//revered array
+app.use('/reverseArray', (req, res, next) =>{
+    var inputArray = [];
+    var size = 3;
+    for (var i=0; i<size; i++){
+        inputArray[i] = prompt("Enter an elements " + (i + 1) + " ");
+    }
+    const reversed = inputArray.reverse();
+    //res.status(200).json({ reversed });
+    console.log(reversed);
+    next();
+})
+
+//4th task
+app.use(express.urlencoded({
+    extended: true
+    })
+)
+app.use(express.json())
+app.post('/todos', (req, res) =>{
+    console.log(req.res.todo)
+})
+
+/*
+http.createServer((req, res) => {
+    console.log("Server is wotking");
+    if (req.method == "GET");{
+        let urlRequst = utl.parse(req.url, true);
+        console.log(urlRequst.query.test);
+        res.end(urlRequst.query.test);
+
+    }
+}).listen(3000);
+*/
+
+
+
+//Create server 
+http.createServer(app).listen(3000, () => {
+    console.log('Server is working on port 3000');
+
+})
+
+
+
+
+--_--__---__-----------------------4.09.2021-----------------------__---__--_--
+//Imports 
+const express = require('express');
+const http = require('http');
+const cors = require('cors');
+const { read, cpSync } = require('fs');
+const { parse } = require('path');
+const { reverse, REFUSED } = require('dns');
+const { url } = require('inspector');
+const prompt = require("prompt-sync")();
+
+//Init zone 
+const app = express();
+app.use(cors()); //использование обработчика на 1-ом уровне (ставить перед запросом)
+
+app.all('/', (req, res) => {
+    console.log('URL = ' + req.url);
+    console.log('Original_URL = ' + req.originalUrl);
+    console.log('METHOD = ' + req.method);
+    console.log('HOST = ' + req.secure);
+    console.log('IsSecure = ' + res.header.host);
+    console.log('Query = ', req.query);
+
+    console.log('Body = ', req.query);
+    res.status(200).json( {message: "All is ok!"});
+});
+
+app.get('/me', (req, res) =>{
+    res.status(200).json( {message: "All is ok!" });
+})
+
+//summary
+app.use('/sum', (req, res, next) => {
+
+    let x1 = parseInt(prompt("Enter 1st num: "));
+    let x2 = parseInt(prompt("Enter 2nd num: "));
+    const sum = x1+x2;
+    
+    res.status(200).json({ sum });
+
+    console.log(sum);
+
+    next();
+})
+
+
+//reverse string 
+app.use('/reverseCase', (req, res, next) => {
+
+    //const prompt = require('prompt');
+
+    //let input = prompt("Enter a string for reverse: ")
+    // program to reverse a string
+
+    // program to reverse a string
+
+    function reverseString(str) {
+
+        // empty string
+        let newString = "";
+        for (let i = str.length - 1; i >= 0; i--) {
+            newString += str[i];
+        }
+        return newString;
+    }
+
+    // take input from the user
+    const string = prompt('Enter a string: ');
+
+    const result = reverseString(string);
+    console.log(result);
+    res.status(200).json({ result });
+
+
+    // take input from the user
+    /*
+    const string = prompt('Enter a string: ');
+
+    const result = reverseString(string);
+    console.log(result);
+
+            //return str;
+
+            
+        }
+   // reverseString("SHA");
+        */
+
+    /*
+    let input = prompt("Enter a string for reverse: ")
+    rev = reverse();
+    res.status(200).json({ rev });
+
+    console.log(rev);
+    */
+   //------------------------------ didn't work
+
+    /*
+    const readline = require('readline');
+    var reverse = require("reverse-string");
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+
+  
+        
+    rl.question('Enter a string for reverse: ', answer => {
+        x = reverse(answer);
+        rl.close();
+        res.writeHead(200).json( {x} );
+
+
+        
+        res.status(200).render('result: ', {ans}, (x)  => {
+            res.send(html)
+        });
+        //res.status(200).json({ x });
+
+
+     
+    */
+    next();
+    
+})
+
+//revered array
+app.use('/reverseArray', (req, res, next) =>{
+    var inputArray = [];
+    var size = 3;
+    for (var i=0; i<size; i++){
+        inputArray[i] = prompt("Enter an elements " + (i + 1) + " ");
+    }
+    const reversed = inputArray.reverse();
+
+    res.status(200).json({ reversed }); 
+    console.log(reversed);
+    next();
+})
+
+//4th task
+app.use(express.urlencoded({
+    extended: true
+    })
+)
+app.use(express.json())
+app.post('/todos', (req, res) =>{
+    console.log(req.res.todo)
+})
+
+/*
+http.createServer((req, res) => {
+    console.log("Server is wotking");
+    if (req.method == "GET");{
+        let urlRequst = utl.parse(req.url, true);
+        console.log(urlRequst.query.test);
+        res.end(urlRequst.query.test);
+
+    }
+}).listen(3000);
+*/
+//----end of 4th task
+
+
+//Create server 
+http.createServer(app).listen(3000, () => {
+    console.log('Server is working on port 3000');
+
+})
+
