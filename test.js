@@ -1,33 +1,28 @@
-var http = require('http');
+//Imports 
+const express = require('express');
+const http = require('http');
+const cors = require('cors');
+const prompt = require('prompt-sync')();
+const { parse } = require('path');
+const { SlowBuffer } = require('buffer');
+const app = express();
+const { Sequelize, Model, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('sqlite::memory:');
 
 
-function handler(req, res) {
-    var POST = {};
-    if (req.method == 'POST') {
-        req.on('data', function(data) {
-            data = data.toString();
-            data = data.split('&');
-            for (var i = 0; i < data.length; i++) {
-                var _data = data[i].split("=");
-                POST[_data[0]] = _data[1];
-            }
-            console.log(POST);
-        })
-    }
-}
+//Init zone 
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors()); //использование обработчика на 1-ом уровне (ставить перед запросом)
 
-http.createServer(function(request, response) {
-    if(request.method == 'POST') {
-        processPost(request, response, function() {
-            console.log(request.post);
-            // Use request.post here
 
-            response.writeHead(200, "OK", {'Content-Type': 'text/plain'});
-            response.end();
-        });
-    } else {
-        response.writeHead(200, "OK", {'Content-Type': 'text/plain'});
-        response.end();
-    }
+var sequelize = new Sequelize('what', 'name', null, {
+  host
+})
 
-}).listen(8000);
+//Create server 
+http.createServer(app).listen(3000, () => {
+    console.log('Server is working on port 3000');
+
+})

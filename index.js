@@ -2,15 +2,15 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-const { read, cpSync } = require('fs');
+const prompt = require('prompt-sync')();
 const { parse } = require('path');
-const { reverse, REFUSED } = require('dns');
-const { url } = require('inspector');
-const { connected } = require('process');
-const prompt = require("prompt-sync")();
+const { SlowBuffer } = require('buffer');
+const app = express();
 
 //Init zone 
-const app = express();
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors()); //использование обработчика на 1-ом уровне (ставить перед запросом)
 
 app.all('/', (req, res) => {
@@ -30,22 +30,22 @@ app.get('/me', (req, res) =>{
 })
 
 //summary
-app.use('/sum', (req, res, next) => {
+app.post('/sum', (req, res, next) => {
+    let body = req.body;
+    let sum = body['x1'] + body['x2'];
 
-    let x1 = parseInt(prompt("Enter 1st num: "));
-    let x2 = parseInt(prompt("Enter 2nd num: "));
-    const sum = x1+x2;
-    
     res.status(200).json({ sum });
 
     console.log(sum);
 
     next();
-})
+});
 
 
 //reverse string 
-app.use('/reverseCase', (req, res, next) => {
+app.post('/reverseCase', (req, res, next) => {
+    let body = req.body;
+    let string = body['string'];
 
     function reverseString(str) {
 
@@ -57,9 +57,6 @@ app.use('/reverseCase', (req, res, next) => {
         return newString;
     }
 
-    // take input from the user
-    const string = prompt('Enter a string for reverse: ');
-
     const result = reverseString(string);
     console.log(result);
     res.status(200).json({ result });
@@ -69,7 +66,8 @@ app.use('/reverseCase', (req, res, next) => {
 })
 
 //revered array
-app.use('/reverseArray', (req, res, next) =>{
+app.post('/reverseArray', (req, res, next) =>{
+
     var inputArray = [];
     var size = 3;
     for (var i=0; i<size; i++){
@@ -80,6 +78,18 @@ app.use('/reverseArray', (req, res, next) =>{
     res.status(200).json({ reversed }); 
     console.log(reversed);
     next();
+
+    /*
+    //let body = req.body;
+    //let inputArray = ['first', 'second', 'third']
+    let inputArray = parse(prompt("Enter an array for reverse: "))['base'];
+    let reversed = inputArray.toString().split('').reverse().join('');
+
+    
+    res.status(200).json({ reversed }); 
+    console.log( reversed );
+    next();
+    */
 })
 
 //4th task
@@ -102,6 +112,58 @@ app.all('/4th', (req, res, next) => {
 
 //----end of 4th task
 
+
+// не нужно
+/*let a = 5;
+console.log('A = ', a);
+
+let b = 'string';
+console.log('B = ', b);
+
+let c = [];
+c.push('xxx');
+c.push('eee');
+c.push('iii');
+c.push('ooo');
+c.push('nnn');
+
+console.log('C = ', c);
+
+
+let json1 = {
+    field1: 5,
+    field2: 'FIELD_2',
+    field3: [1,2,3,4,5],
+    fun1: (param1) => {
+        console.log('FUN d, param1 = ', param1)
+    }
+}
+
+// json1.b = json1.b.replace('xee', 'www');
+// json1.c.push(12);
+
+
+console.log("JSON = ", json1);
+console.log("JSON.b = ", json1.field2);
+
+let keyFromApiCall = 'field2';
+console.log('JSON test = ', json1[keyFromApiCall]);
+
+
+function ab(callback) {
+    console.log('THIS IS A FUN A!');
+    callback();
+
+ }
+
+ ab( 'abcdef' )
+const tmpVal = a('werwerwer');
+console.log("TMP_val = ", tmpVal);
+
+
+json1.fun1(123415)
+*/
+// не нужно
 
 //Create server 
 http.createServer(app).listen(3000, () => {
